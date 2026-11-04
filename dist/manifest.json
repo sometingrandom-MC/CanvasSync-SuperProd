@@ -1,0 +1,31 @@
+{
+  "id": "canvas-sync",
+  "name": "Canvas Assignments",
+  "version": "2.0.2",
+  "manifestVersion": 1,
+  "minSupVersion": "19.3.1",
+  "description": "Imports your Canvas LMS assignments as tasks: scheduled at the due time, with the due date kept as the task's deadline, one project per course. Works on desktop and Android.",
+  "author": "sometingrandom-MC",
+  "type": "issueProvider",
+  "icon": "icon.svg",
+  "iFrame": false,
+  "permissions": [],
+  "hooks": ["taskCreated"],
+  "dataSharing": [
+    {
+      "recipient": "Canvas LMS",
+      "userServer": true,
+      "data": ["credentials"]
+    }
+  ],
+  "issueProvider": {
+    "pollIntervalMs": 600000,
+    "icon": "calendar",
+    "humanReadableName": "Canvas",
+    "defaultAutoAddToBacklog": true,
+    "issueStrings": {
+      "singular": "Assignment",
+      "plural": "Assignments"
+    }
+  }
+}
