@@ -1,4 +1,4 @@
-// Canvas Assignments v2.0.2 for Super Productivity. Built from src/ — edit there.
+// Canvas Assignments v2.0.4 for Super Productivity. Built from src/ — edit there.
 "use strict";
 (() => {
   // src/assignments.ts
@@ -75,11 +75,12 @@
     minute: "2-digit"
   });
   var stateOf = (a) => a.submitted ? "submitted" : "open";
+  var withoutTagSyntax = (title) => title.replace(/(^|\s)#(?=[^\s+#@!])/g, "$1# ");
   var toSearchResult = (a, settings) => {
     const schedule = a.dueMs === null ? {} : settings.scheduleWholeDay ? { start: a.dueMs, isAllDay: true } : { dueWithTime: a.dueMs };
     return {
       id: a.issueId,
-      title: a.title,
+      title: withoutTagSyntax(a.title),
       url: a.url,
       status: stateOf(a),
       description: a.description,

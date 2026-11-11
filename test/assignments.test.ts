@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   type Assignment,
   htmlToText,
+  withoutTagSyntax,
   isInSession,
   isSubmitted,
   parseIssueId,
@@ -106,6 +107,7 @@ test('Canvas assignment -> import result, exact time or whole day', () => {
 
   const exact = toSearchResult(asg, settings);
   assert.equal(exact.id, '10:77');
+  assert.equal(exact.title, 'Essay # 2', 'SP sees no #tag on import');
   assert.equal(exact.dueWithTime, asg.dueMs);
   assert.equal(exact.start, undefined);
 
@@ -118,6 +120,7 @@ test('Canvas assignment -> import result, exact time or whole day', () => {
   assert.equal(undated.start, undefined);
 
   const issue = toIssue(asg);
+  assert.equal(issue.title, 'Essay #2', 'refreshes keep the real title');
   assert.equal(issue.state, 'open');
   assert.equal(issue.lastUpdated, Date.UTC(2026, 10, 1));
   assert.equal(issue.pointsText, '20 pts');
@@ -127,4 +130,12 @@ test('Canvas assignment -> import result, exact time or whole day', () => {
 test('htmlToText drops scripts and keeps structure', () => {
   assert.equal(htmlToText('<script>x()</script><p>a<br>b</p>'), 'a\nb');
   assert.equal(htmlToText(null), '');
+});
+
+test('titles handed to SP for import contain no tag syntax', () => {
+  assert.equal(withoutTagSyntax('Homework #3'), 'Homework # 3');
+  assert.equal(withoutTagSyntax('#01 Intro, Quiz #2b'), '# 01 Intro, Quiz # 2b');
+  assert.equal(withoutTagSyntax('C# basics'), 'C# basics');
+  assert.equal(withoutTagSyntax('Lab#4'), 'Lab#4', 'SP ignores # inside a word');
+  assert.equal(withoutTagSyntax('Essay # 2'), 'Essay # 2');
 });

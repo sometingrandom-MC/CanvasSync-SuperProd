@@ -110,6 +110,20 @@ test('a newly imported task gets deadline, exact title, marker and course projec
   assert.equal(state.courseProjects['10'], bio.id);
 });
 
+test('the exact title comes back after a #-safe import', async () => {
+  const a = asg('1', { title: 'Homework #3' });
+  const fake = makeApi();
+  // SP created the task from the import title, which had "# 3".
+  const task = fake.addTask({ issueType: ISSUE_TYPE, issueId: a.issueId, title: 'Homework # 3' });
+  const sync = new TaskSync(fake.api as never, () => NOW);
+  sync.settings = settings;
+  sync.remember([a]);
+  await sync.processNewTask(task.id, 0);
+  const update = fake.updates.find((u) => 'title' in u.changes)!;
+  assert.equal(update.changes.title, 'Homework #3');
+  assert.ok(Object.keys(update.changes).length > 1, 'not re-parsed by SP');
+});
+
 test('several imports from one new course create one project', async () => {
   const fake = makeApi();
   const sync = new TaskSync(fake.api as never, () => NOW);

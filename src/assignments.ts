@@ -149,6 +149,14 @@ export const formatDue = (ms: number | null): string =>
 const stateOf = (a: Assignment): string => (a.submitted ? 'submitted' : 'open');
 
 /**
+ * SP reads `#word` at the start of a title or after a space as a tag when it
+ * creates a task ("Homework #3" -> tag "3"). Adding a space after the `#`
+ * stops that; the plugin restores the exact title right after import.
+ */
+export const withoutTagSyntax = (title: string): string =>
+  title.replace(/(^|\s)#(?=[^\s+#@!])/g, '$1# ');
+
+/**
  * Search/import result. On import SP schedules the task at `dueWithTime`, or on
  * the day of `start` when whole-day scheduling is on. Extra fields ride along
  * for the issue panel.
@@ -162,7 +170,7 @@ export const toSearchResult = (a: Assignment, settings: Settings): PluginSearchR
         : { dueWithTime: a.dueMs };
   return {
     id: a.issueId,
-    title: a.title,
+    title: withoutTagSyntax(a.title),
     url: a.url,
     status: stateOf(a),
     description: a.description,

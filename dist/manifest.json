@@ -1,7 +1,7 @@
 {
   "id": "canvas-sync",
   "name": "Canvas Assignments",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "manifestVersion": 1,
   "minSupVersion": "19.3.1",
   "description": "Imports your Canvas LMS assignments as tasks: scheduled at the due time, with the due date kept as the task's deadline, one project per course. Works on desktop and Android.",
